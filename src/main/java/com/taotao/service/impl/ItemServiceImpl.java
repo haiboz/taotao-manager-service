@@ -2,23 +2,24 @@ package com.taotao.service.impl;
 
 import java.util.Date;
 import java.util.List;
-
-import javax.naming.spi.DirStateFactory.Result;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.taotao.bo.ItemParamBo;
 import com.taotao.common.pojo.EUDataGridResult;
 import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.common.util.IDUtils;
+import com.taotao.mapper.TbItemCatMapper;
 import com.taotao.mapper.TbItemDescMapper;
 import com.taotao.mapper.TbItemMapper;
+import com.taotao.mapper.TbItemParamMapper;
 import com.taotao.pojo.TbItem;
 import com.taotao.pojo.TbItemDesc;
 import com.taotao.pojo.TbItemExample;
+import com.taotao.pojo.TbItemParamExample;
+import com.taotao.pojo.TbItemParamVo;
 import com.taotao.service.ItemService;
 
 /**
@@ -32,6 +33,12 @@ public class ItemServiceImpl implements ItemService {
 	public TbItemMapper itemMapper;
 	@Autowired
 	public TbItemDescMapper itemDescMapper;
+	@Autowired
+	public TbItemParamMapper itemParamMapper;
+	@Autowired
+	public TbItemCatMapper itemCatMapper;
+	@Autowired
+	public ItemParamBo itemParamBoImpl;
 	@Override
 	public TbItem getItemById(long id) {
 //		TbItem item = itemMapper.selectByPrimaryKey(id);
@@ -97,5 +104,30 @@ public class ItemServiceImpl implements ItemService {
 		}else{
 			return TaotaoResult.ok();
 		}
+	}
+	@Override
+	public EUDataGridResult getItemParamList(int page, int rows) {
+		TbItemParamExample example = new TbItemParamExample();
+		PageHelper.startPage(page, rows);
+//		List<TbItemParamVo> voList = new ArrayList<TbItemParamVo>();
+		example.createCriteria();
+		//要使用带blob类型的查询  否则规格参数查询不出来
+//		List<TbItemParamVo> list = itemParamMapper.selectByExampleWithBLOBs(example);
+		List<TbItemParamVo> list2 = itemParamBoImpl.queryPageList(page, rows);
+//		//对象拷贝
+//		for (TbItemParam tbItemParam : list) {
+//			Long catId = tbItemParam.getItemCatId();
+//			TbItemCat itemCat = itemCatMapper.selectByPrimaryKey(catId);
+//			TbItemParamVo tbItemParamVo = new TbItemParamVo();
+//			BeanUtils.copyProperties(tbItemParam, tbItemParamVo);
+//			tbItemParamVo.setItemCatName(itemCat.getName());
+//			voList.add(tbItemParamVo);
+//		}
+		PageInfo<TbItemParamVo> pageInfo = new PageInfo<>(list2);
+		long total = pageInfo.getTotal();
+		EUDataGridResult result = new EUDataGridResult();
+		result.setRows(list2);
+		result.setTotal(total);
+		return result;
 	}
 }

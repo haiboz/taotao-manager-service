@@ -21,4 +21,13 @@ public interface ItemService {
 	 * @return
 	 */
 	TaotaoResult createItem(TbItem item,String desc) throws Exception ;
+	
+	
+	/**
+	 * 分页查询规格模版
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	EUDataGridResult getItemParamList(int page,int rows);
 }
