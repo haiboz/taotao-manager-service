@@ -16,8 +16,8 @@ public interface ItemService {
 	
 	/**
 	 * 插入商品信息
-	 * @param item
-	 * @param desc
+	 * @param item 商品信息
+	 * @param desc 描述
 	 * @return
 	 */
 	TaotaoResult createItem(TbItem item,String desc) throws Exception ;
@@ -25,9 +25,9 @@ public interface ItemService {
 	
 	/**
 	 * 分页查询规格模版
-	 * @param page
-	 * @param rows
+	 * @param pageNum 页码
+	 * @param length 每页长度
 	 * @return
 	 */
-	EUDataGridResult getItemParamList(int page,int rows);
+	EUDataGridResult getItemParamList(int pageNum,int length);
 }

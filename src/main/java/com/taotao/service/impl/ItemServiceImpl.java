@@ -106,27 +106,23 @@ public class ItemServiceImpl implements ItemService {
 		}
 	}
 	@Override
-	public EUDataGridResult getItemParamList(int page, int rows) {
-		TbItemParamExample example = new TbItemParamExample();
-		PageHelper.startPage(page, rows);
+	public EUDataGridResult getItemParamList(int pageNum, int length) {
+		//方法1
+//		TbItemParamExample example = new TbItemParamExample();
+//		PageHelper.startPage(page, rows);
 //		List<TbItemParamVo> voList = new ArrayList<TbItemParamVo>();
-		example.createCriteria();
-		//要使用带blob类型的查询  否则规格参数查询不出来
+//		example.createCriteria();
+//		//要使用带blob类型的查询  否则规格参数查询不出来
 //		List<TbItemParamVo> list = itemParamMapper.selectByExampleWithBLOBs(example);
-		List<TbItemParamVo> list2 = itemParamBoImpl.queryPageList(page, rows);
-//		//对象拷贝
-//		for (TbItemParam tbItemParam : list) {
-//			Long catId = tbItemParam.getItemCatId();
-//			TbItemCat itemCat = itemCatMapper.selectByPrimaryKey(catId);
-//			TbItemParamVo tbItemParamVo = new TbItemParamVo();
-//			BeanUtils.copyProperties(tbItemParam, tbItemParamVo);
-//			tbItemParamVo.setItemCatName(itemCat.getName());
-//			voList.add(tbItemParamVo);
-//		}
-		PageInfo<TbItemParamVo> pageInfo = new PageInfo<>(list2);
-		long total = pageInfo.getTotal();
+//		PageInfo<TbItemParamVo> pageInfo = new PageInfo<>(list);
+//		long total = pageInfo.getTotal();
+		//方法2
+		//计算起始位置
+		int begin = (pageNum-1)*length;
+		List<TbItemParamVo> list = itemParamBoImpl.queryPageList(begin, length);
+		int total = itemParamBoImpl.queryListCount();
 		EUDataGridResult result = new EUDataGridResult();
-		result.setRows(list2);
+		result.setRows(list);
 		result.setTotal(total);
 		return result;
 	}
