@@ -22,4 +22,5 @@ public interface ItemParamBo extends LavaBo<TbItemParam, TbItemParamExample> {
 	 * @return
 	 */
 	public int queryListCount();
+	
 }

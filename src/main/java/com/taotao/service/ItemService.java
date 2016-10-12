@@ -18,9 +18,10 @@ public interface ItemService {
 	 * 插入商品信息
 	 * @param item 商品信息
 	 * @param desc 描述
+	 * @param itemParam 规格参数
 	 * @return
 	 */
-	TaotaoResult createItem(TbItem item,String desc) throws Exception ;
+	TaotaoResult createItem(TbItem item,String desc,String itemParam) throws Exception ;
 	
 	
 	/**

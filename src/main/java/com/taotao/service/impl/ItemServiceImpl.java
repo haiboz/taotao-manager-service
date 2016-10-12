@@ -14,11 +14,12 @@ import com.taotao.common.util.IDUtils;
 import com.taotao.mapper.TbItemCatMapper;
 import com.taotao.mapper.TbItemDescMapper;
 import com.taotao.mapper.TbItemMapper;
+import com.taotao.mapper.TbItemParamItemMapper;
 import com.taotao.mapper.TbItemParamMapper;
 import com.taotao.pojo.TbItem;
 import com.taotao.pojo.TbItemDesc;
 import com.taotao.pojo.TbItemExample;
-import com.taotao.pojo.TbItemParamExample;
+import com.taotao.pojo.TbItemParamItem;
 import com.taotao.pojo.TbItemParamVo;
 import com.taotao.service.ItemService;
 
@@ -39,6 +40,8 @@ public class ItemServiceImpl implements ItemService {
 	public TbItemCatMapper itemCatMapper;
 	@Autowired
 	public ItemParamBo itemParamBoImpl;
+	@Autowired
+	public TbItemParamItemMapper itemParamItemMapper;
 	@Override
 	public TbItem getItemById(long id) {
 //		TbItem item = itemMapper.selectByPrimaryKey(id);
@@ -67,7 +70,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 	
 	@Override
-	public TaotaoResult createItem(TbItem item,String desc) throws Exception {
+	public TaotaoResult createItem(TbItem item,String desc,String itemParam) throws Exception {
 		//item 补全
 		item.setId(IDUtils.genItemId());
 		item.setStatus((byte)1);
@@ -79,10 +82,13 @@ public class ItemServiceImpl implements ItemService {
 			return TaotaoResult.error(400, "商品插入失败");
 		}else{
 			//插入商品描述
-			TaotaoResult result = insertItemDesc(item.getId(),desc);
+			Long itemId = item.getId();
+			TaotaoResult result = insertItemDesc(itemId,desc);
 			if(result.getStatus() != 200){
 				throw new Exception();
 			}
+			//添加规格参数
+			result = this.insertItemParamItem(itemId, itemParam);
 			return result;
 		}
 	}
@@ -107,7 +113,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 	@Override
 	public EUDataGridResult getItemParamList(int pageNum, int length) {
-		//方法1
+		//方法1 此方法暂时无法获得类目的中文名称
 //		TbItemParamExample example = new TbItemParamExample();
 //		PageHelper.startPage(page, rows);
 //		List<TbItemParamVo> voList = new ArrayList<TbItemParamVo>();
@@ -125,5 +131,21 @@ public class ItemServiceImpl implements ItemService {
 		result.setRows(list);
 		result.setTotal(total);
 		return result;
+	}
+	
+	/**
+	 * 保存规格参数
+	 * @param itemId
+	 * @param itemPatam
+	 * @return
+	 */
+	private TaotaoResult insertItemParamItem(Long itemId ,String itemParam){
+		TbItemParamItem itemParamItem = new TbItemParamItem();
+		itemParamItem.setItemId(itemId);
+		itemParamItem.setParamData(itemParam);
+		itemParamItem.setCreated(new Date());
+		itemParamItem.setUpdated(new Date());
+		itemParamItemMapper.insert(itemParamItem);
+		return TaotaoResult.ok();
 	}
 }
