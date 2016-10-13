@@ -59,6 +59,7 @@ public class ItemServiceImpl implements ItemService {
 		TbItemExample example = new TbItemExample();
 		PageHelper.startPage(page, rows);
 		example.createCriteria();
+		example.setOrderByClause("created desc");
 		List<TbItem> list = itemMapper.selectByExample(example);
 		//取分页信息
 		PageInfo<TbItem> pageInfo = new PageInfo<>(list);
@@ -146,6 +147,34 @@ public class ItemServiceImpl implements ItemService {
 		itemParamItem.setCreated(new Date());
 		itemParamItem.setUpdated(new Date());
 		itemParamItemMapper.insert(itemParamItem);
+		return TaotaoResult.ok();
+	}
+	@Override
+	public TaotaoResult deleteItems(String ids) {
+		String[] idsStr = ids.split(",");
+		for (String str : idsStr) {
+			itemMapper.deleteByPrimaryKey(Long.parseLong(str));
+		}
+		return TaotaoResult.ok();
+	}
+	@Override
+	public TaotaoResult reshelfItem(String ids) {
+		String[] idsStr = ids.split(",");
+		for (String str : idsStr) {
+			TbItem tbItem = itemMapper.selectByPrimaryKey(Long.parseLong(str));
+			tbItem.setStatus((byte)1);//状态1 上架
+			itemMapper.updateByPrimaryKey(tbItem);
+		}
+		return TaotaoResult.ok();
+	}
+	@Override
+	public TaotaoResult instockItem(String ids) {
+		String[] idsStr = ids.split(",");
+		for (String str : idsStr) {
+			TbItem tbItem = itemMapper.selectByPrimaryKey(Long.parseLong(str));
+			tbItem.setStatus((byte)2);//状态2 下架
+			itemMapper.updateByPrimaryKey(tbItem);
+		}
 		return TaotaoResult.ok();
 	}
 }

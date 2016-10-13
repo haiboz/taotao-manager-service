@@ -31,4 +31,22 @@ public interface ItemService {
 	 * @return
 	 */
 	EUDataGridResult getItemParamList(int pageNum,int length);
+	/**
+	 * 批量删除商品
+	 * @param ids
+	 * @return
+	 */
+	TaotaoResult deleteItems(String ids);
+	/**
+	 * 批量上架商品
+	 * @param ids
+	 * @return
+	 */
+	TaotaoResult reshelfItem(String ids);
+	/**
+	 * 批量下架商品
+	 * @param ids
+	 * @return
+	 */
+	TaotaoResult instockItem(String ids);
 }
