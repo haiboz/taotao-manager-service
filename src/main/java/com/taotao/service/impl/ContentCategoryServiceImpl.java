@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.taotao.common.pojo.EUTreeNode;
 import com.taotao.common.pojo.TaotaoResult;
@@ -20,7 +21,7 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
 	private TbContentCategoryMapper mapper;
 	
 	@Override
-	public List<EUTreeNode> getCategoryList(long parentId) {
+	public List<EUTreeNode> getCategoryList(Long parentId) {
 		TbContentCategoryExample example = new TbContentCategoryExample();
 		example.createCriteria().andParentIdEqualTo(parentId);
 		example.setOrderByClause("created desc");
@@ -35,9 +36,9 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
 		}
 		return listTree;
 	}
-
+ 
 	@Override
-	public TaotaoResult insertContentCategory(long parentId, String name) {
+	public TaotaoResult insertContentCategory(Long parentId, String name) {
 		TbContentCategory contentCategory = new TbContentCategory();
 		contentCategory.setName(name);
 		contentCategory.setParentId(parentId);
@@ -57,6 +58,34 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
 		//返回结果
 		return TaotaoResult.ok(contentCategory);
 		
+	}
+
+	@Override
+	public TaotaoResult updateContentCategory(Long id, String name) {
+		TbContentCategory record = mapper.selectByPrimaryKey(id);
+		record.setName(name);
+		mapper.updateByPrimaryKey(record);
+		return TaotaoResult.ok(record);
+	}
+
+	@Override
+	public TaotaoResult deleteContentCategory(Long parentId, Long id) {
+		if(parentId == null){
+			parentId = mapper.selectByPrimaryKey(id).getParentId();
+		}
+		//删除记录
+		mapper.deleteByPrimaryKey(id);
+		//如果父类已没有子类 则将isParent置为false
+		TbContentCategoryExample example = new TbContentCategoryExample();
+		
+		example.createCriteria().andParentIdEqualTo(parentId);
+		List<TbContentCategory> list = mapper.selectByExample(example);
+		if(CollectionUtils.isEmpty(list)){
+			TbContentCategory record = mapper.selectByPrimaryKey(parentId);
+			record.setIsParent(false);
+			mapper.updateByPrimaryKey(record);
+		}
+		return TaotaoResult.ok();
 	}
 
 }
