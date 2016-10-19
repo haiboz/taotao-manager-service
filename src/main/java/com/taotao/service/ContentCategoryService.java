@@ -15,7 +15,7 @@ public interface ContentCategoryService {
 	 * @param parentId
 	 * @return
 	 */
-	public List<EUTreeNode> getCategoryList(long parentId);
+	public List<EUTreeNode> getCategoryList(Long parentId);
 	
 	/**
 	 * 新增新的内容分类
@@ -23,5 +23,22 @@ public interface ContentCategoryService {
 	 * @param name
 	 * @return
 	 */
-	public TaotaoResult insertContentCategory(long parentId,String name);
+	public TaotaoResult insertContentCategory(Long parentId,String name);
+
+	/**
+	 * 修改内容分类
+	 * @param id
+	 * @param name
+	 * @return
+	 */
+	public TaotaoResult updateContentCategory(Long id, String name);
+
+	/**
+	 * 删除内容分类
+	 * @param parentId
+	 * @param id
+	 * @return
+	 */
+	public TaotaoResult deleteContentCategory(Long parentId, Long Long);
+
 }
