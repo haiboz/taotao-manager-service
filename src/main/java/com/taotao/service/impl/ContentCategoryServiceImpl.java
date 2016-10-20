@@ -24,7 +24,7 @@ public class ContentCategoryServiceImpl implements ContentCategoryService {
 	public List<EUTreeNode> getCategoryList(Long parentId) {
 		TbContentCategoryExample example = new TbContentCategoryExample();
 		example.createCriteria().andParentIdEqualTo(parentId);
-		example.setOrderByClause("created desc");
+		example.setOrderByClause("updated desc");
 		List<TbContentCategory> list = mapper.selectByExample(example);
 		List<EUTreeNode> listTree = new ArrayList<EUTreeNode>();
 		for (TbContentCategory tbContentCategory : list) {

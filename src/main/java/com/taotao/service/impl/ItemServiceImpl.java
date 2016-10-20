@@ -59,7 +59,7 @@ public class ItemServiceImpl implements ItemService {
 		TbItemExample example = new TbItemExample();
 		PageHelper.startPage(page, rows);
 		example.createCriteria();
-		example.setOrderByClause("created desc");
+		example.setOrderByClause("updated desc");
 		List<TbItem> list = itemMapper.selectByExample(example);
 		//取分页信息
 		PageInfo<TbItem> pageInfo = new PageInfo<>(list);
