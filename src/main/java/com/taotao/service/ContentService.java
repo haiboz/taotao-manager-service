@@ -20,4 +20,18 @@ public interface ContentService {
 	 * @return
 	 */
 	public TaotaoResult saveContent(TbContent tbContent);
+
+	/**
+	 * 修改内容
+	 * @param tbContent
+	 * @return
+	 */
+	public TaotaoResult editContent(TbContent tbContent);
+
+	/**
+	 * 批量删除内容
+	 * @param ids
+	 * @return
+	 */
+	public TaotaoResult deleteContent(String ids);
 }

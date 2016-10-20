@@ -43,6 +43,22 @@ public class ContentServiceImpl implements ContentService {
 		mapper.insert(tbContent);
 		return TaotaoResult.ok();
 	}
+
+	@Override
+	public TaotaoResult editContent(TbContent tbContent) {
+		tbContent.setUpdated(new Date());
+		mapper.updateByPrimaryKey(tbContent);
+		return TaotaoResult.ok();
+	}
+
+	@Override
+	public TaotaoResult deleteContent(String ids) {
+		String[] idStr = ids.split(",");
+		for (String str : idStr) {
+			mapper.deleteByPrimaryKey(Long.parseLong(str));
+		}
+		return TaotaoResult.ok();
+	}
 	
 	
 
